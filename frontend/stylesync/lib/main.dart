@@ -1,7 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'dart:async';
-import 'dart:math';
 
 void main() {
   runApp(StyleSyncApp());
@@ -13,7 +12,7 @@ class StyleSyncApp extends StatelessWidget {
     return MaterialApp(
       title: 'StyleSync',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.purple,
       ),
       home: WelcomeScreen(),
     );
@@ -30,8 +29,8 @@ class WelcomeScreen extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF64B5F6),
-              Color(0xFF0D47A1),
+              Color.fromRGBO(253, 175, 19, 1),
+              Color.fromARGB(255, 78, 232, 240),
             ],
           ),
         ),
@@ -61,7 +60,9 @@ class WelcomeScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    fadeRoute(LoadingScreen(PersonalInfoScreen())),
+                    MaterialPageRoute(
+                      builder: (context) => PersonalInfoScreen(),
+                    ),
                   );
                 },
                 child: Text('Get Started'),
@@ -83,7 +84,7 @@ class PersonalInfoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('Personal Information')),
+        title: Text('Personal Information'),
         automaticallyImplyLeading: false, // Disables back button
       ),
       body: Container(
@@ -92,8 +93,8 @@ class PersonalInfoScreen extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF64B5F6),
-              Color(0xFF0D47A1),
+              Color.fromRGBO(253, 175, 19, 1),
+              Color.fromARGB(255, 78, 232, 240),
             ],
           ),
         ),
@@ -112,7 +113,11 @@ class PersonalInfoScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    fadeRoute(LoadingScreen(StyleChoiceScreen())),
+                    MaterialPageRoute(
+                      builder: (context) => FeelLikeScreen(
+                        name: nameController.text,
+                      ),
+                    ),
                   );
                 },
                 child: Text('Next'),
@@ -124,9 +129,9 @@ class PersonalInfoScreen extends StatelessWidget {
     );
   }
 
-  Widget buildAnimatedTextField(TextEditingController controller, String labelText) {
+  Widget buildAnimatedTextField(
+      TextEditingController controller, String labelText) {
     return AnimatedContainer(
-      height: 60,
       duration: Duration(milliseconds: 500),
       curve: Curves.easeInOut,
       decoration: BoxDecoration(
@@ -149,14 +154,23 @@ class PersonalInfoScreen extends StatelessWidget {
   }
 }
 
-class StyleChoiceScreen extends StatelessWidget {
-  final TextEditingController styleController = TextEditingController();
+class FeelLikeScreen extends StatefulWidget {
+  final String name;
+
+  FeelLikeScreen({required this.name});
+
+  @override
+  _FeelLikeScreenState createState() => _FeelLikeScreenState();
+}
+
+class _FeelLikeScreenState extends State<FeelLikeScreen> {
+  final TextEditingController feelingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Style Choice'),
+        title: Text('What do you feel like?'),
         automaticallyImplyLeading: false, // Disables back button
       ),
       body: Container(
@@ -165,8 +179,8 @@ class StyleChoiceScreen extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF64B5F6),
-              Color(0xFF0D47A1),
+              Color.fromRGBO(253, 175, 19, 1),
+              Color.fromARGB(255, 78, 232, 240),
             ],
           ),
         ),
@@ -175,11 +189,19 @@ class StyleChoiceScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              buildAnimatedTextField(styleController, 'What do you feel like today?'),
+              buildAnimatedTextField(feelingController, 'Enter your feeling'),
               SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  // Handle the style choice
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TakeSeatScreen(
+                        feeling: feelingController.text,
+                        name: widget.name,
+                      ),
+                    ),
+                  );
                 },
                 child: Text('Next'),
               ),
@@ -190,9 +212,9 @@ class StyleChoiceScreen extends StatelessWidget {
     );
   }
 
-  Widget buildAnimatedTextField(TextEditingController controller, String labelText) {
+  Widget buildAnimatedTextField(
+      TextEditingController controller, String labelText) {
     return AnimatedContainer(
-      height: 60,
       duration: Duration(milliseconds: 500),
       curve: Curves.easeInOut,
       decoration: BoxDecoration(
@@ -215,77 +237,84 @@ class StyleChoiceScreen extends StatelessWidget {
   }
 }
 
-class LoadingScreen extends StatefulWidget {
-  final Widget nextScreen;
+class TakeSeatScreen extends StatelessWidget {
+  final String feeling;
+  final String name;
 
-  LoadingScreen(this.nextScreen);
-
-  @override
-  _LoadingScreenState createState() => _LoadingScreenState();
-}
-
-class _LoadingScreenState extends State<LoadingScreen> {
-  final List<Map<String, String>> fashionTips = [
-    {'tip': "Blend in your color the same way you blend in your coffee", 'author': "Hari"},
-    {'tip': "Don't stress cross-dress", 'author': "F1NNSTER {Classic fashion icon on twitch}"},
-    {'tip': "我和你妈过了整个夜，然后他说我该当你爸", 'author': "Varun Vidwans {The greatest chinese shitposter of VIT}"},
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    Timer(Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        fadeRoute(widget.nextScreen),
-      );
-    });
-  }
+  TakeSeatScreen({required this.feeling, required this.name});
 
   @override
   Widget build(BuildContext context) {
-    final randomTip = fashionTips[Random().nextInt(fashionTips.length)];
-
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Take a Seat'),
+      ),
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF64B5F6),
-              Color(0xFF0D47A1),
-            ],
-          ),
-        ),
+        color: Colors.purple,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text(
+              'Take a seat and relax, $name, we will do everything for you.',
+              style: TextStyle(fontSize: 24, color: Colors.white),
+              textAlign: TextAlign.center,
+            ),
             SizedBox(height: 16),
-            Text(
-              randomTip['tip']!,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            Text(
-              '- ' + randomTip['author']!,
-              style: TextStyle(
-                fontSize: 16,
-                fontStyle: FontStyle.italic,
-                color: Colors.white,
-              ),
-            ),
-            SizedBox(height: 32),
-            FadeAnimatedTextKit(
-              text: ['Loading...'],
-              textStyle: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddClothesScreen(),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      Icon(Icons.add),
+                      SizedBox(height: 8),
+                      Text('Add Clothes'),
+                    ],
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => GenerateFitScreen(),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      Icon(Icons.auto_awesome),
+                      SizedBox(height: 8),
+                      Text('Generate Fit'),
+                    ],
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SettingsScreen(),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      Icon(Icons.settings),
+                      SizedBox(height: 8),
+                      Text('Settings'),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -294,14 +323,50 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 }
 
-Route fadeRoute(Widget screen) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => screen,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      return FadeTransition(
-        opacity: animation,
-        child: child,
-      );
-    },
-  );
+class AddClothesScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Add Clothes'),
+      ),
+      body: Container(
+        child: Center(
+          child: Text('Add Clothes'),
+        ),
+      ),
+    );
+  }
+}
+
+class GenerateFitScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Generate Fit'),
+      ),
+      body: Container(
+        child: Center(
+          child: Text('Generate Fit'),
+        ),
+      ),
+    );
+  }
+}
+
+class SettingsScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Settings'),
+      ),
+      body: Container(
+        child: Center(
+          child: Text('Settings'),
+        ),
+      ),
+    );
+  }
 }
