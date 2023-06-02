@@ -13,9 +13,25 @@ openai.api_key  = read_api_key("api_key.txt")
         
 
 messages = [
-    {"role": "system", "content": "You are an intelligent clothing assistant. You shall create outfits from the clothes in the user's closet. \
-    Output the outfit as a list of clothing items. Use a cheerful tone while describing the clothes."},
+    {
+        "role": "system",
+        "content": "You are an intelligent clothing assistant. You shall create outfits from the clothes in the user's closet. \
+        Output the outfit as a list of clothing items. Use a cheerful tone while describing the clothes. \
+        There are 3 main categories which are Tops, Bottoms, and accessories. \
+        Make sure to include a top, a bottom, and an accessory if it fits well. \
+        Make the outfit as fashionable as possible. \
+        Make only 1 outfit suggestion. \
+        Make the outfit appropriate and sensible."
+    }
 ]
+with open('biodata.txt', 'r') as file:
+        lines = file.readlines()
+        age = int(lines[0].strip())
+        pronoun = lines[1].strip()
+        preference = lines[2].strip()
+
+age, pronoun, preference = read_data_from_file(filename)
+
 
 file_path =r'wardrobe.csv'
 
@@ -26,22 +42,18 @@ with open(file_path, 'r') as f:
         row_string = ', '.join(row)
         messages.append({'role': "user", "content": row_string})
 
-with open(file_path, 'r') as f:
-    csv_string = f.read()
 
-print(csv_string)
-
-
-"""
-message = input("User : ")
-messages.append({"role": "user", "content": message},
-                )
-"""
 chat = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo", messages=messages,temperature=1.3, max_tokens=150
+            model="gpt-3.5-turbo", messages=messages,temperature=0.7, max_tokens=150
         )
 reply = chat.choices[0].message.content
-print(f"Today's fit!!!! \n {reply}")
+
 messages.append({"role": "assistant", "content": reply})
+
+fit=open("fit.txt","w")
+fit.write(reply)
+fit.close()
+
+
 
 
