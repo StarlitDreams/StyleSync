@@ -70,15 +70,26 @@ class WelcomeScreen extends StatelessWidget {
                     );
                   },
                   style: ButtonStyle(
-                    padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(15)),
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.blueAccent),
+                    padding: MaterialStateProperty.all<EdgeInsets>(
+                      EdgeInsets.all(15),
+                    ),
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      Colors.blueAccent,
+                    ),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                     ),
                   ),
-                  child: Text('Get Started', style: TextStyle(fontFamily: 'Pixelated', fontSize: 20, color: Colors.white),),
+                  child: Text(
+                    'Get Started',
+                    style: TextStyle(
+                      fontFamily: 'Pixelated',
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -89,11 +100,37 @@ class WelcomeScreen extends StatelessWidget {
   }
 }
 
+class PersonalInfoScreen extends StatefulWidget {
+  @override
+  _PersonalInfoScreenState createState() => _PersonalInfoScreenState();
+}
 
-class PersonalInfoScreen extends StatelessWidget {
+class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
   final TextEditingController pronounsController = TextEditingController();
+  bool isNameValid = true;
+  bool isAgeValid = true;
+  bool isPronounsValid = true;
+
+  void validateFields() {
+    setState(() {
+      isNameValid = nameController.text.isNotEmpty;
+      isAgeValid = ageController.text.isNotEmpty;
+      isPronounsValid = pronounsController.text.isNotEmpty;
+
+      if (isNameValid && isAgeValid && isPronounsValid) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FeelLikeScreen(
+              name: nameController.text,
+            ),
+          ),
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,39 +139,30 @@ class PersonalInfoScreen extends StatelessWidget {
         title: Text('Personal Information'),
         automaticallyImplyLeading: false, // Disables back button
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color.fromRGBO(253, 175, 19, 1),
-              Color.fromARGB(255, 78, 232, 240),
-            ],
+      body: Center(
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromRGBO(253, 175, 19, 1),
+                Color.fromARGB(255, 78, 232, 240),
+              ],
+            ),
           ),
-        ),
-        child: Padding(
           padding: EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              buildAnimatedTextField(nameController, 'Name'),
+              buildAnimatedTextField(nameController, 'Name', isNameValid),
               SizedBox(height: 16),
-              buildAnimatedTextField(ageController, 'Age'),
+              buildAnimatedTextField(ageController, 'Age', isAgeValid),
               SizedBox(height: 16),
-              buildAnimatedTextField(pronounsController, 'Pronouns'),
+              buildAnimatedTextField(pronounsController, 'Pronouns', isPronounsValid),
               SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FeelLikeScreen(
-                        name: nameController.text,
-                      ),
-                    ),
-                  );
-                },
+                onPressed: validateFields,
                 child: Text('Next'),
               ),
             ],
@@ -145,13 +173,17 @@ class PersonalInfoScreen extends StatelessWidget {
   }
 
   Widget buildAnimatedTextField(
-      TextEditingController controller, String labelText) {
+    TextEditingController controller,
+    String labelText,
+    bool isValid,
+  ) {
     return AnimatedContainer(
       duration: Duration(milliseconds: 500),
       curve: Curves.easeInOut,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: isValid ? Colors.transparent : Colors.red),
       ),
       child: TextField(
         controller: controller,
@@ -163,16 +195,43 @@ class PersonalInfoScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: 16),
+          errorText: isValid ? null : 'Please enter $labelText',
         ),
       ),
     );
   }
 }
 
-class FeelLikeScreen extends StatelessWidget {
+class FeelLikeScreen extends StatefulWidget {
   final String name;
 
   FeelLikeScreen({required this.name});
+
+  @override
+  _FeelLikeScreenState createState() => _FeelLikeScreenState();
+}
+
+class _FeelLikeScreenState extends State<FeelLikeScreen> {
+  final TextEditingController feelingController = TextEditingController();
+  bool isFeelingValid = true;
+
+  void validateFields() {
+    setState(() {
+      isFeelingValid = feelingController.text.isNotEmpty;
+
+      if (isFeelingValid) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TakeSeatScreen(
+              feeling: feelingController.text,
+              name: widget.name,
+            ),
+          ),
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -197,20 +256,14 @@ class FeelLikeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              buildAnimatedTextField(TextEditingController(), 'Enter your feeling'),
+              buildAnimatedTextField(
+                feelingController,
+                'Enter your feeling',
+                isFeelingValid,
+              ),
               SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TakeSeatScreen(
-                        feeling: 'feeling',
-                        name: name,
-                      ),
-                    ),
-                  );
-                },
+                onPressed: validateFields,
                 child: Text('Next'),
               ),
             ],
@@ -221,13 +274,17 @@ class FeelLikeScreen extends StatelessWidget {
   }
 
   Widget buildAnimatedTextField(
-      TextEditingController controller, String labelText) {
+    TextEditingController controller,
+    String labelText,
+    bool isValid,
+  ) {
     return AnimatedContainer(
       duration: Duration(milliseconds: 500),
       curve: Curves.easeInOut,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: isValid ? Colors.transparent : Colors.red),
       ),
       child: TextField(
         controller: controller,
@@ -239,6 +296,7 @@ class FeelLikeScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: 16),
+          errorText: isValid ? null : 'Please enter $labelText',
         ),
       ),
     );
