@@ -1,6 +1,13 @@
 import openai
 
-openai.api_key = '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'
+def read_api_key(filename):
+    with open(filename, 'r') as file:
+        api_key = file.readline().strip()  
+    return api_key
+
+
+openai.api_key  = read_api_key("api_key.txt")
+
 
 messages = [
     {"role": "system", "content": "You are an intelligent clothing assistant. You shall create outfits from the clothes in the user's closet. \
