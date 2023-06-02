@@ -37,9 +37,7 @@ class WelcomeScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              FlutterLogo(
-                size: 150,
-              ),
+              Image.asset('images/logo.jpg', height: 150), // updated this line
               SizedBox(height: 16),
               DefaultTextStyle(
                 style: TextStyle(
@@ -73,6 +71,7 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 }
+
 
 class PersonalInfoScreen extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
