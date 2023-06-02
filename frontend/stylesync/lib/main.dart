@@ -37,12 +37,16 @@ class WelcomeScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('images/logo.jpg', height: 150), // updated this line
+              Hero(
+                tag: 'logo',
+                child: Image.asset('images/logo.jpg', height: 150),
+              ),
               SizedBox(height: 16),
               DefaultTextStyle(
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  fontFamily: 'CustomFont',
                   color: Colors.white,
                 ),
                 child: AnimatedTextKit(
@@ -53,16 +57,29 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PersonalInfoScreen(),
+              AnimatedOpacity(
+                opacity: 1,
+                duration: Duration(seconds: 2),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PersonalInfoScreen(),
+                      ),
+                    );
+                  },
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(15)),
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.blueAccent),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
                     ),
-                  );
-                },
-                child: Text('Get Started', style: TextStyle(fontFamily: 'Pixelated'),),
+                  ),
+                  child: Text('Get Started', style: TextStyle(fontFamily: 'Pixelated', fontSize: 20, color: Colors.white),),
+                ),
               ),
             ],
           ),
