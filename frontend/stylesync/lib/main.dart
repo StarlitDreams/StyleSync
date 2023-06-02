@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
@@ -154,17 +153,10 @@ class PersonalInfoScreen extends StatelessWidget {
   }
 }
 
-class FeelLikeScreen extends StatefulWidget {
+class FeelLikeScreen extends StatelessWidget {
   final String name;
 
   FeelLikeScreen({required this.name});
-
-  @override
-  _FeelLikeScreenState createState() => _FeelLikeScreenState();
-}
-
-class _FeelLikeScreenState extends State<FeelLikeScreen> {
-  final TextEditingController feelingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -189,7 +181,7 @@ class _FeelLikeScreenState extends State<FeelLikeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              buildAnimatedTextField(feelingController, 'Enter your feeling'),
+              buildAnimatedTextField(TextEditingController(), 'Enter your feeling'),
               SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
@@ -197,8 +189,8 @@ class _FeelLikeScreenState extends State<FeelLikeScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => TakeSeatScreen(
-                        feeling: feelingController.text,
-                        name: widget.name,
+                        feeling: 'feeling',
+                        name: name,
                       ),
                     ),
                   );
