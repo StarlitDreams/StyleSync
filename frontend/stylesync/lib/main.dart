@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 void main() {
   runApp(StyleSyncApp());
@@ -91,6 +92,51 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+              ),
+              SizedBox(height: 16),
+              Text(
+                'Connect with us',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      // Handle social media button action
+                    },
+                    icon: FaIcon(
+                      FontAwesomeIcons.linkedin,
+                      color: Colors.white,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      // Handle social media button action
+                    },
+                    icon: FaIcon(
+                      FontAwesomeIcons.twitter,
+                      color: Colors.white,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      // Handle social media button action
+                    },
+                    icon: FaIcon(
+                      FontAwesomeIcons.instagram,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
             ],
           ),
