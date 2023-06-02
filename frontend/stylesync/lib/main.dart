@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
@@ -11,45 +12,29 @@ class StyleSyncApp extends StatelessWidget {
     return MaterialApp(
       title: 'StyleSync',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.purple,
       ),
-      home: SplashScreen(),
+      home: WelcomeScreen(),
     );
   }
 }
 
-class SplashScreen extends StatefulWidget {
-  @override
-  _SplashScreenState createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 2),
-    );
-
-    _animationController.forward();
-    Future.delayed(Duration(seconds: 4), () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => PersonalInfoScreen()),
-      );
-    });
-  }
-
+class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: FadeTransition(
-          opacity: _animationController,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color.fromRGBO(253, 175, 19, 1),
+              Color.fromARGB(255, 78, 232, 240),
+            ],
+          ),
+        ),
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -61,14 +46,81 @@ class _SplashScreenState extends State<SplashScreen>
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue,
+                  color: Colors.white,
                 ),
                 child: AnimatedTextKit(
                   animatedTexts: [
-                    TypewriterAnimatedText('StyleSync'),
+                    TypewriterAnimatedText('Welcome to StyleSync'),
                   ],
                   totalRepeatCount: 1,
                 ),
+              ),
+              SizedBox(height: 32),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PersonalInfoScreen(),
+                    ),
+                  );
+                },
+                child: Text('Get Started'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class PersonalInfoScreen extends StatelessWidget {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
+  final TextEditingController pronounsController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Personal Information'),
+        automaticallyImplyLeading: false, // Disables back button
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color.fromRGBO(253, 175, 19, 1),
+              Color.fromARGB(255, 78, 232, 240),
+            ],
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              buildAnimatedTextField(nameController, 'Name'),
+              SizedBox(height: 16),
+              buildAnimatedTextField(ageController, 'Age'),
+              SizedBox(height: 16),
+              buildAnimatedTextField(pronounsController, 'Pronouns'),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FeelLikeScreen(
+                        name: nameController.text,
+                      ),
+                    ),
+                  );
+                },
+                child: Text('Next'),
               ),
             ],
           ),
@@ -77,55 +129,192 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
+  Widget buildAnimatedTextField(
+      TextEditingController controller, String labelText) {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: TextField(
+        controller: controller,
+        style: TextStyle(color: Colors.black),
+        decoration: InputDecoration(
+          labelText: labelText,
+          labelStyle: TextStyle(color: Colors.black54),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 16),
+        ),
+      ),
+    );
   }
 }
 
-class PersonalInfoScreen extends StatelessWidget {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController ageController = TextEditingController();
-  final TextEditingController genderController = TextEditingController();
-  final TextEditingController pronounsController = TextEditingController();
+class FeelLikeScreen extends StatefulWidget {
+  final String name;
+
+  FeelLikeScreen({required this.name});
+
+  @override
+  _FeelLikeScreenState createState() => _FeelLikeScreenState();
+}
+
+class _FeelLikeScreenState extends State<FeelLikeScreen> {
+  final TextEditingController feelingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Personal Information'),
+        title: Text('What do you feel like?'),
+        automaticallyImplyLeading: false, // Disables back button
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color.fromRGBO(253, 175, 19, 1),
+              Color.fromARGB(255, 78, 232, 240),
+            ],
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              buildAnimatedTextField(feelingController, 'Enter your feeling'),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TakeSeatScreen(
+                        feeling: feelingController.text,
+                        name: widget.name,
+                      ),
+                    ),
+                  );
+                },
+                child: Text('Next'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildAnimatedTextField(
+      TextEditingController controller, String labelText) {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: TextField(
+        controller: controller,
+        style: TextStyle(color: Colors.black),
+        decoration: InputDecoration(
+          labelText: labelText,
+          labelStyle: TextStyle(color: Colors.black54),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 16),
+        ),
+      ),
+    );
+  }
+}
+
+class TakeSeatScreen extends StatelessWidget {
+  final String feeling;
+  final String name;
+
+  TakeSeatScreen({required this.feeling, required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Take a Seat'),
+      ),
+      body: Container(
+        color: Colors.purple,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              controller: nameController,
-              decoration: InputDecoration(labelText: 'Name'),
-            ),
-            TextField(
-              controller: ageController,
-              decoration: InputDecoration(labelText: 'Age'),
-            ),
-            TextField(
-              controller: genderController,
-              decoration: InputDecoration(labelText: 'Gender'),
-            ),
-            TextField(
-              controller: pronounsController,
-              decoration: InputDecoration(labelText: 'Pronouns'),
+            Text(
+              'Take a seat and relax, $name, we will do everything for you.',
+              style: TextStyle(fontSize: 24, color: Colors.white),
+              textAlign: TextAlign.center,
             ),
             SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => StyleChoiceScreen()),
-                );
-              },
-              child: Text('Next'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddClothesScreen(),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      Icon(Icons.add),
+                      SizedBox(height: 8),
+                      Text('Add Clothes'),
+                    ],
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => GenerateFitScreen(),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      Icon(Icons.auto_awesome),
+                      SizedBox(height: 8),
+                      Text('Generate Fit'),
+                    ],
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SettingsScreen(),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      Icon(Icons.settings),
+                      SizedBox(height: 8),
+                      Text('Settings'),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -134,32 +323,48 @@ class PersonalInfoScreen extends StatelessWidget {
   }
 }
 
-class StyleChoiceScreen extends StatelessWidget {
-  final TextEditingController styleController = TextEditingController();
-
+class AddClothesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Style Choice'),
+        title: Text('Add Clothes'),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: styleController,
-              decoration: InputDecoration(labelText: 'What do you feel like today?'),
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                // Handle the style choice
-              },
-              child: Text('Next'),
-            ),
-          ],
+      body: Container(
+        child: Center(
+          child: Text('Add Clothes'),
+        ),
+      ),
+    );
+  }
+}
+
+class GenerateFitScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Generate Fit'),
+      ),
+      body: Container(
+        child: Center(
+          child: Text('Generate Fit'),
+        ),
+      ),
+    );
+  }
+}
+
+class SettingsScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Settings'),
+      ),
+      body: Container(
+        child: Center(
+          child: Text('Settings'),
         ),
       ),
     );
