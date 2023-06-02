@@ -62,7 +62,7 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                   );
                 },
-                child: Text('Get Started'),
+                child: Text('Get Started', style: TextStyle(fontFamily: 'Pixelated'),),
               ),
             ],
           ),
