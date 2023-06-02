@@ -21,16 +21,22 @@ messages = [
         Make sure to include a top, a bottom, and an accessory if it fits well. \
         Make the outfit as fashionable as possible. \
         Make only 1 outfit suggestion. \
+        The user will tell you their age, pronouns, and clothing preference. \
+        The user will also tell you the clothes in their closet. \
+        Print the outfit in a list.\
         Make the outfit appropriate and sensible."
     }
 ]
+
 with open('biodata.txt', 'r') as file:
         lines = file.readlines()
         age = int(lines[0].strip())
         pronoun = lines[1].strip()
         preference = lines[2].strip()
 
-age, pronoun, preference = read_data_from_file(filename)
+messages.append({"role": "user", "content": "I am " + str(age) + " years old."})
+messages.append({"role": "user", "content": "I Identify as " + pronoun + "."})
+messages.append({"role": "user", "content": "I prefer " + preference + " clothing today."})
 
 
 file_path =r'wardrobe.csv'
