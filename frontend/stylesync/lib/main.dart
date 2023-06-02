@@ -163,7 +163,7 @@ class FeelLikeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('What do you feel like?'),
-        automaticallyImplyLeading: false, // Disables back button
+        automaticallyImplyLeading: true, // Disables back button
       ),
       body: Container(
         decoration: BoxDecoration(
