@@ -48,7 +48,6 @@ with open(file_path, 'r') as f:
         row_string = ', '.join(row)
         messages.append({'role': "user", "content": row_string})
 
-
 chat = openai.ChatCompletion.create(
             model="gpt-3.5-turbo", messages=messages,temperature=0.7, max_tokens=150
         )
