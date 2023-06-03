@@ -223,7 +223,14 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Personal Information'),
+        title: Text('Personal Information',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+          color: Colors.white,
+        ),),
+        
+        backgroundColor: Colors.indigo[900], 
         automaticallyImplyLeading: false, // Disables back button
       ),
       body: Container(
@@ -336,7 +343,13 @@ class _FeelLikeScreenState extends State<FeelLikeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('What do you feel like?'),
+        title: Text('What do you feel like?',
+        style : TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+          color: Colors.white,
+        ),), 
+        backgroundColor: Colors.indigo[900],
         automaticallyImplyLeading: true, // Disables back button
       ),
       body: Container(
@@ -443,7 +456,8 @@ class TakeSeatScreen extends StatelessWidget {
                 speed: Duration(milliseconds: 50),
                 repeatForever: false,
                 text: ['Take a seat and relax $name, we will do everything for you.'],
-                textStyle: TextStyle(fontSize: 24, color: Colors.white),
+                textStyle: TextStyle(fontSize: 24, color: Colors.white,
+                fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -713,13 +727,13 @@ class _GenerateFitScreenState extends State<GenerateFitScreen> {
     String outputContent = '';
     String outputText = '';
     try {
-      // Get the directory where main.py is located
+      
       final directory = Directory('C:/Users/Nimish Shukla/Documents/GitHub/StyleSync/backend');
 
-      // Run the main.py script using the 'python' command
+     
       final result = await Process.run('python', ['main.py'], workingDirectory: directory.path);
 
-      // Read the content of output.txt
+     
       final outputFile = File('${directory.path}/fit.txt');
       outputContent = await outputFile.readAsString();
 
@@ -756,19 +770,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
       "question": "How to enable Eye Protector Mode?",
       "answer": "You can toggle the Eye Protector Mode switch in the Settings screen.",
     },
-    // Add more FAQs here...
+    
   ];
 
   final List<Map<String, dynamic>> aboutAppList = [
     {
       "question": "Who are the creators of this app?",
-      "answer": "This app is created by Nyanners Company.",
+      "answer": "This app is created by Nyanners",
+    },
+    {
+      "question" : "Who are the members of Nyanners?",
+      "answer" : "Nimish - Front end and API integration\nHari - Backend\nSaksham - Design\nSam - Support",
     },
     {
       "question": "Which languages does the app support?",
       "answer": "The app supports English, with more languages coming soon.",
     },
-    // Add more about app FAQs here...
+    
   ];
 
   void _submitFeedback() async {
