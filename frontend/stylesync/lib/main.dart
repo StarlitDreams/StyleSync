@@ -36,6 +36,7 @@ class _StyleSyncAppState extends State<StyleSyncApp> {
     return MaterialApp(
       title: 'StyleSync',
       theme: ThemeData(
+        useMaterial3: true,
         primarySwatch: Colors.purple,
         brightness: eyeProtectorModeEnabled ? Brightness.dark : Brightness.light,
       ),
@@ -66,9 +67,9 @@ class WelcomeScreen extends StatelessWidget {
                   tag: 'logo',
                   child: Image.asset('images/logo.jpg', height: 150),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 DefaultTextStyle(
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'CustomFont',
@@ -81,10 +82,10 @@ class WelcomeScreen extends StatelessWidget {
                     totalRepeatCount: 1,
                   ),
                 ),
-                SizedBox(height: 32),
+                const SizedBox(height: 32),
                 AnimatedOpacity(
                   opacity: 1,
-                  duration: Duration(seconds: 2),
+                  duration: const Duration(seconds: 2),
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -96,7 +97,7 @@ class WelcomeScreen extends StatelessWidget {
                     },
                     style: ButtonStyle(
                       padding: MaterialStateProperty.all<EdgeInsets>(
-                        EdgeInsets.all(15),
+                        const EdgeInsets.all(15),
                       ),
                       backgroundColor: MaterialStateProperty.all<Color>(
                         Colors.blueAccent,
@@ -107,7 +108,7 @@ class WelcomeScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    child: Text(
+                    child: const Text(
                       'Get Started',
                       style: TextStyle(
                         fontFamily: 'Pixelated',
@@ -303,7 +304,7 @@ class _FeelLikeScreenState extends State<FeelLikeScreen> {
     try {
       Directory backendDir =
           Directory('C:/Users/Nimish Shukla/Documents/GitHub/StyleSync/backend');
-      File fitFile = File('${backendDir.path}/fit.txt');
+      File fitFile = File('${backendDir.path}/biodata.txt');
       String feeling = feelingController.text;
 
       await fitFile.writeAsString(feeling);
@@ -679,7 +680,7 @@ class _GenerateFitScreenState extends State<GenerateFitScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Generate Fit'),
+        title: const Text('Generate Fit'),
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
@@ -687,12 +688,10 @@ class _GenerateFitScreenState extends State<GenerateFitScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              onPressed: () {
-                runPythonScript();
-              },
-              child: Text('Generate Fit'),
+              onPressed: runPythonScript,
+              child: const Text('Generate Fit'),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             Text(outputText),
           ],
         ),

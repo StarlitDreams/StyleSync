@@ -1,13 +1,16 @@
 import openai
 import csv
+import os
 
-def read_api_key(filename):
+def read_api_key():
+    filename = r"C:\Users\Nimish Shukla\Documents\GitHub\StyleSync\backend\api_key.txt"
+    print(filename)
     with open(filename, 'r') as file:
-        api_key = file.readline().strip()  
+        api_key = file.readline().strip()
     return api_key
 
 
-openai.api_key  = read_api_key("api_key.txt")
+openai.api_key  = read_api_key()
 
 
         
