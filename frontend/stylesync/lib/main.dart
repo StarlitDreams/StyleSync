@@ -2,22 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+final GlobalKey<_StyleSyncAppState> appKey = GlobalKey<_StyleSyncAppState>();
+
 void main() {
-  runApp(StyleSyncApp());
+  runApp(StyleSyncApp(key: appKey));
 }
 
-class StyleSyncApp extends StatelessWidget {
+class StyleSyncApp extends StatefulWidget {
+  StyleSyncApp({Key? key}) : super(key: key);
+
+  @override
+  _StyleSyncAppState createState() => _StyleSyncAppState();
+}
+
+class _StyleSyncAppState extends State<StyleSyncApp> {
+  bool eyeProtectorModeEnabled = false;
+
+  void toggleEyeProtectorMode(bool value) {
+    setState(() {
+      eyeProtectorModeEnabled = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'StyleSync',
       theme: ThemeData(
         primarySwatch: Colors.purple,
+        brightness: eyeProtectorModeEnabled ? Brightness.dark : Brightness.light,
       ),
       home: WelcomeScreen(),
     );
   }
 }
+
 
 class WelcomeScreen extends StatelessWidget {
   @override
@@ -304,7 +323,7 @@ class _FeelLikeScreenState extends State<FeelLikeScreen> {
             children: [
               buildAnimatedTextField(
                 feelingController,
-                'Enter your feeling',
+                'What do you feel like?',
                 isFeelingValid,
               ),
               SizedBox(height: 16),
@@ -359,17 +378,28 @@ class TakeSeatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Take a Seat'),
+        title: Text('Menu'),
       ),
       body: Container(
-        color: Colors.purple,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('images/testing.jpg'), // Replace with your image path
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Take a seat and relax, $name, we will do everything for you.',
-              style: TextStyle(fontSize: 24, color: Colors.white),
-              textAlign: TextAlign.center,
+            AnimatedOpacity(
+              opacity: 1.0,
+              duration: Duration(milliseconds: 500),
+              child: TypewriterAnimatedTextKit(
+                speed: Duration(milliseconds: 50),
+                repeatForever: false,
+                text: ['Take a seat and relax $name, we will do everything for you.'],
+                textStyle: TextStyle(fontSize: 24, color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
             ),
             SizedBox(height: 16),
             Row(
@@ -434,7 +464,6 @@ class TakeSeatScreen extends StatelessWidget {
     );
   }
 }
-
 class AddClothesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -467,7 +496,45 @@ class GenerateFitScreen extends StatelessWidget {
   }
 }
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
+  @override
+  _SettingsScreenState createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  bool eyeProtectorModeEnabled = false;
+
+  final _formKey = GlobalKey<FormState>();
+  final _feedbackController = TextEditingController();
+  
+  final List<Map<String, dynamic>> faqList = [
+    {
+      "question": "What is Eye Protector Mode?",
+      "answer": "Eye Protector Mode is designed to reduce eye strain by adjusting the color temperature of your screen.",
+    },
+    {
+      "question": "How to enable Eye Protector Mode?",
+      "answer": "You can toggle the Eye Protector Mode switch in the Settings screen.",
+    },
+    // Add more FAQs here...
+  ];
+
+  final List<Map<String, dynamic>> aboutAppList = [
+    {
+      "question": "Who are the creators of this app?",
+      "answer": "This app is created by Nyanners Company.",
+    },
+    {
+      "question": "Which languages does the app support?",
+      "answer": "The app supports English, with more languages coming soon.",
+    },
+    // Add more about app FAQs here...
+  ];
+
+  void _submitFeedback() async {
+    // existing feedback submission code...
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -475,8 +542,43 @@ class SettingsScreen extends StatelessWidget {
         title: Text('Settings'),
       ),
       body: Container(
-        child: Center(
-          child: Text('Settings'),
+        child: ListView(
+          padding: EdgeInsets.all(16),
+          children: [
+            SwitchListTile(
+              title: Text('Eye Protector Mode'),
+              value: eyeProtectorModeEnabled,
+              onChanged: (value) {
+                setState(() {
+                  eyeProtectorModeEnabled = value;
+                  // Perform any other necessary actions when enabling or disabling eye protector mode
+                });
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    // Existing feedback form code...
+                  ],
+                ),
+              ),
+            ),
+            Text('FAQ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            ...faqList.map((faq) => ExpansionTile(
+              title: Text(faq['question']),
+              children: [ListTile(title: Text(faq['answer']))],
+            )).toList(),
+            Text('About the App', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            ...aboutAppList.map((about) => ExpansionTile(
+              title: Text(about['question']),
+              children: [ListTile(title: Text(about['answer']))],
+            )).toList(),
+            // Add more settings options here...
+          ],
         ),
       ),
     );
