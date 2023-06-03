@@ -7,6 +7,7 @@ import 'package:csv/csv.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/services.dart';
 import 'dart:ffi';
+import 'dart:ui';
 
 final GlobalKey<_StyleSyncAppState> appKey = GlobalKey<_StyleSyncAppState>();
 
@@ -42,6 +43,7 @@ class _StyleSyncAppState extends State<StyleSyncApp> {
     );
   }
 }
+
 
 
 class WelcomeScreen extends StatelessWidget {
@@ -282,6 +284,8 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   }
 }
 
+
+
 class FeelLikeScreen extends StatefulWidget {
   final String name;
 
@@ -297,7 +301,8 @@ class _FeelLikeScreenState extends State<FeelLikeScreen> {
 
   Future<void> saveData() async {
     try {
-      Directory backendDir = Directory('C:/Users/Nimish Shukla/Documents/GitHub/StyleSync/backend');
+      Directory backendDir =
+          Directory('C:/Users/Nimish Shukla/Documents/GitHub/StyleSync/backend');
       File fitFile = File('${backendDir.path}/fit.txt');
       String feeling = feelingController.text;
 
@@ -353,7 +358,20 @@ class _FeelLikeScreenState extends State<FeelLikeScreen> {
               SizedBox(height: 16),
               ElevatedButton(
                 onPressed: validateFields,
-                child: Text('Next'),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.purple, // Set button color
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    side: BorderSide(color: Colors.purple), // Add border
+                  ),
+                ),
+                child: Text(
+                  'Next',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ),
@@ -491,6 +509,7 @@ class TakeSeatScreen extends StatelessWidget {
 }
 
 
+
 class AddClothesScreen extends StatefulWidget {
   @override
   _AddClothesScreenState createState() => _AddClothesScreenState();
@@ -499,6 +518,7 @@ class AddClothesScreen extends StatefulWidget {
 class _AddClothesScreenState extends State<AddClothesScreen> {
   List<List<String>> clothesList = [];
   TextEditingController clothController = TextEditingController();
+  String selectedCategory = '';
 
   @override
   void initState() {
@@ -539,67 +559,61 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
     await _saveClothesList();
   }
 
-  Future<void> _editCloth(int index, String newCloth) async {
-    setState(() {
-      clothesList[index] = [newCloth];
-    });
-    await _saveClothesList();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Add Clothes'),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Column(
-          children: <Widget>[
-            TextField(
-              controller: clothController,
-              decoration: InputDecoration(hintText: 'Enter clothes name'),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: clothesList.length,
-                itemBuilder: (context, index) {
-                  return Dismissible(
-                    key: Key(clothesList[index].join(',')),
-                    onDismissed: (direction) {
-                      _removeCloth(index);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Cloth deleted.'),
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
-                    },
-                    background: Container(color: Colors.red),
-                    child: AnimatedOpacity(
-                      opacity: 1.0,
-                      duration: Duration(milliseconds: 500),
-                      child: Container(
-                        margin: EdgeInsets.symmetric(vertical: 8),
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 3,
-                              offset: Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(clothesList[index].join(',')),
-                            ),
-                            IconButton(
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('images/background.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+          child: Container(
+            color: Colors.white.withOpacity(0.6),
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                children: <Widget>[
+                  Text('Select Category'),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _categoryButton('Tops'),
+                      _categoryButton('Bottoms'),
+                      _categoryButton('Accessories'),
+                    ],
+                  ),
+                  TextField(
+                    controller: clothController,
+                    decoration: InputDecoration(hintText: 'Enter clothes name'),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: clothesList.length,
+                      itemBuilder: (context, index) {
+                        return Dismissible(
+                          key: Key(clothesList[index].join(',')),
+                          onDismissed: (direction) {
+                            _removeCloth(index);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Cloth deleted.'),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                          },
+                          background: Container(color: Colors.red),
+                          child: ListTile(
+                            title: Text(clothesList[index][0]),
+                            subtitle: clothesList[index].length > 1 ? Text(clothesList[index][1]) : null,
+                            trailing: IconButton(
                               icon: Icon(Icons.delete),
                               onPressed: () {
                                 _removeCloth(index);
@@ -611,23 +625,23 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
                                 );
                               },
                             ),
-                          ],
-                        ),
-                      ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
+                  ),
+                ],
               ),
             ),
-          ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () async {
-          if (clothController.text.isNotEmpty) {
+          if (clothController.text.isNotEmpty && selectedCategory.isNotEmpty) {
             setState(() {
-              clothesList.add([clothController.text]);
+              clothesList.add([selectedCategory, clothController.text]);
             });
             clothController.clear();
             await _saveClothesList();
@@ -636,8 +650,21 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
       ),
     );
   }
-}
 
+  Widget _categoryButton(String category) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        primary: category == selectedCategory ? Colors.blue : Colors.grey,
+      ),
+      onPressed: () {
+        setState(() {
+          selectedCategory = category;
+        });
+      },
+      child: Text(category),
+    );
+  }
+}
 
 
 class GenerateFitScreen extends StatefulWidget {
