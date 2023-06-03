@@ -329,11 +329,24 @@ class _FeelLikeScreenState extends State<FeelLikeScreen> {
   final TextEditingController feelingController = TextEditingController();
   bool isFeelingValid = true;
 
+  Future<void> saveData() async {
+    try {
+      Directory backendDir = Directory('C:/Users/Nimish Shukla/Documents/GitHub/StyleSync/backend');
+      File fitFile = File('${backendDir.path}/fit.txt');
+      String feeling = feelingController.text;
+
+      await fitFile.writeAsString(feeling);
+    } catch (e) {
+      print('Error saving data: $e');
+    }
+  }
+
   void validateFields() {
     setState(() {
       isFeelingValid = feelingController.text.isNotEmpty;
 
       if (isFeelingValid) {
+        saveData(); // Save data to the file
         Navigator.push(
           context,
           MaterialPageRoute(
