@@ -102,7 +102,7 @@ class WelcomeScreen extends StatelessWidget {
                         Colors.blueAccent,
                       ),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
+                          RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
                         ),
                       ),
@@ -723,7 +723,6 @@ class _GenerateFitScreenState extends State<GenerateFitScreen> {
   }
 }
 
-
 class SettingsScreen extends StatefulWidget {
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
@@ -734,7 +733,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   final _formKey = GlobalKey<FormState>();
   final _feedbackController = TextEditingController();
-  
+
   final List<Map<String, dynamic>> faqList = [
     {
       "question": "What is Eye Protector Mode?",
@@ -769,45 +768,133 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: AppBar(
         title: Text('Settings'),
       ),
-      body: Container(
-        child: ListView(
-          padding: EdgeInsets.all(16),
-          children: [
-            SwitchListTile(
-              title: Text('Eye Protector Mode'),
-              value: eyeProtectorModeEnabled,
-              onChanged: (value) {
-                setState(() {
-                  eyeProtectorModeEnabled = value;
-                  // Perform any other necessary actions when enabling or disabling eye protector mode
-                });
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    // Existing feedback form code...
-                  ],
-                ),
+      body: Stack(
+        children: [
+          Container(
+            color: Colors.purpleAccent[100],
+          ),
+          Center(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: EdgeInsets.all(8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'FAQ',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        ...faqList.map(
+                          (faq) => ExpansionTile(
+                            title: Text(
+                              faq['question'],
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            children: [
+                              ListTile(
+                                title: Text(
+                                  faq['answer'],
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ).toList(),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: EdgeInsets.all(8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'About the App',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        ...aboutAppList.map(
+                          (about) => ExpansionTile(
+                            title: Text(
+                              about['question'],
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            children: [
+                              ListTile(
+                                title: Text(
+                                  about['answer'],
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ).toList(),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.7),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: EdgeInsets.all(8),
+                    child: SwitchListTile(
+                      title: Text(
+                        'Eye Protector Mode',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      value: eyeProtectorModeEnabled,
+                      onChanged: (value) {
+                        setState(() {
+                          eyeProtectorModeEnabled = value;
+                          // Perform any other necessary actions when enabling or disabling eye protector mode
+                        });
+                      },
+                    ),
+                  ),
+                  // Add more settings options here...
+                ],
               ),
             ),
-            Text('FAQ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-            ...faqList.map((faq) => ExpansionTile(
-              title: Text(faq['question']),
-              children: [ListTile(title: Text(faq['answer']))],
-            )).toList(),
-            Text('About the App', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-            ...aboutAppList.map((about) => ExpansionTile(
-              title: Text(about['question']),
-              children: [ListTile(title: Text(about['answer']))],
-            )).toList(),
-            // Add more settings options here...
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
