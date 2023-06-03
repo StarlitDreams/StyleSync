@@ -37,7 +37,7 @@ class _StyleSyncAppState extends State<StyleSyncApp> {
       title: 'StyleSync',
       theme: ThemeData(
         useMaterial3: true,
-        primarySwatch: Colors.purple,
+        primarySwatch: Colors.indigo,
         brightness: eyeProtectorModeEnabled ? Brightness.dark : Brightness.light,
       ),
       home: WelcomeScreen(),
@@ -360,10 +360,10 @@ class _FeelLikeScreenState extends State<FeelLikeScreen> {
               ElevatedButton(
                 onPressed: validateFields,
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.purple, // Set button color
+                  primary: Colors.indigoAccent, // Set button color
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
-                    side: BorderSide(color: Colors.purple), // Add border
+                    side: BorderSide(color: Colors.indigo), // Add border
                   ),
                 ),
                 child: Text(
@@ -422,7 +422,9 @@ class TakeSeatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Menu'),
+        title: Text('Menu', style:
+          TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.indigo[900],
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -674,7 +676,14 @@ class GenerateFitScreen extends StatefulWidget {
 }
 
 class _GenerateFitScreenState extends State<GenerateFitScreen> {
-  String outputText = '';
+
+  late Future<String> outputText;
+
+  @override
+  void initState() {
+    super.initState();
+    outputText = runPythonScript();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -692,14 +701,17 @@ class _GenerateFitScreenState extends State<GenerateFitScreen> {
               child: const Text('Generate Fit'),
             ),
             const SizedBox(height: 16.0),
-            Text(outputText),
+        FutureBuilder(builder: (context, snapshot) { if (snapshot.hasData) {return Text(snapshot.data!);} else {return const CircularProgressIndicator();} ;}, future: outputText,)
+            ,
           ],
         ),
       ),
     );
   }
 
-  void runPythonScript() async {
+  Future<String> runPythonScript() async {
+    String outputContent = '';
+    String outputText = '';
     try {
       // Get the directory where main.py is located
       final directory = Directory('C:/Users/Nimish Shukla/Documents/GitHub/StyleSync/backend');
@@ -708,8 +720,8 @@ class _GenerateFitScreenState extends State<GenerateFitScreen> {
       final result = await Process.run('python', ['main.py'], workingDirectory: directory.path);
 
       // Read the content of output.txt
-      final outputFile = File('${directory.path}/output.txt');
-      final outputContent = await outputFile.readAsString();
+      final outputFile = File('${directory.path}/fit.txt');
+      outputContent = await outputFile.readAsString();
 
       setState(() {
         outputText = outputContent;
@@ -719,6 +731,8 @@ class _GenerateFitScreenState extends State<GenerateFitScreen> {
         outputText = 'Error running Python script: $e';
       });
     }
+    
+  return outputContent;
   }
 }
 
@@ -770,7 +784,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: Stack(
         children: [
           Container(
-            color: Colors.purpleAccent[100],
+            color: Colors.indigo[100],
           ),
           Center(
             child: SingleChildScrollView(
