@@ -6,7 +6,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:csv/csv.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/services.dart';
-import 'dart:ffi';
 import 'dart:ui';
 
 final GlobalKey<_StyleSyncAppState> appKey = GlobalKey<_StyleSyncAppState>();
@@ -24,6 +23,7 @@ class StyleSyncApp extends StatefulWidget {
 
 class _StyleSyncAppState extends State<StyleSyncApp> {
   bool eyeProtectorModeEnabled = false;
+
 
   void toggleEyeProtectorMode(bool value) {
     setState(() {
@@ -325,7 +325,7 @@ class _FeelLikeScreenState extends State<FeelLikeScreen> {
       isFeelingValid = feelingController.text.isNotEmpty;
 
       if (isFeelingValid) {
-        saveData(); // Save data to the file
+        saveData(); 
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -350,12 +350,12 @@ class _FeelLikeScreenState extends State<FeelLikeScreen> {
           color: Colors.white,
         ),), 
         backgroundColor: Colors.indigo[900],
-        automaticallyImplyLeading: true, // Disables back button
+        automaticallyImplyLeading: true, 
       ),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('images/background.jpg'), // Replace with your image path
+            image: AssetImage('images/background.jpg'), 
             fit: BoxFit.cover,
           ),
         ),
@@ -373,10 +373,10 @@ class _FeelLikeScreenState extends State<FeelLikeScreen> {
               ElevatedButton(
                 onPressed: validateFields,
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.indigoAccent, // Set button color
+                  primary: Colors.indigoAccent, 
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
-                    side: BorderSide(color: Colors.indigo), // Add border
+                    side: BorderSide(color: Colors.indigo), 
                   ),
                 ),
                 child: Text(
@@ -442,7 +442,7 @@ class TakeSeatScreen extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('images/background.jpg'), // Replace with your image path
+            image: AssetImage('images/background.jpg'), 
             fit: BoxFit.cover,
           ),
         ),
@@ -915,12 +915,71 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       onChanged: (value) {
                         setState(() {
                           eyeProtectorModeEnabled = value;
-                          // Perform any other necessary actions when enabling or disabling eye protector mode
-                        });
+
+                        },);
                       },
                     ),
                   ),
-                  // Add more settings options here...
+                  
+
+                  SizedBox(height: 16),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.7),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: EdgeInsets.all(8),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Feedback',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          TextFormField(
+                            controller: _feedbackController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter some feedback';
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              hintText: 'Enter your feedback here',
+                              hintStyle: TextStyle(
+                                color: Colors.white.withOpacity(0.5),
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                              filled: true,
+                              fillColor: Colors.white.withOpacity(0.1),
+                            ),
+                            maxLines: 5,
+                          ),
+                          SizedBox(height: 8),
+                          Center(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  _submitFeedback();
+                                }
+                              },
+                              child: Text('Submit'),
+
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
