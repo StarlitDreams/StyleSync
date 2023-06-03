@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:csv/csv.dart';
+import 'package:path/path.dart' as path;
 
 final GlobalKey<_StyleSyncAppState> appKey = GlobalKey<_StyleSyncAppState>();
 
@@ -484,9 +485,6 @@ class TakeSeatScreen extends StatelessWidget {
 }
 
 
-
-
-
 class AddClothesScreen extends StatefulWidget {
   @override
   _AddClothesScreenState createState() => _AddClothesScreenState();
@@ -504,8 +502,8 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
 
   Future<void> _loadClothesList() async {
     try {
-      Directory appDocDir = await getApplicationDocumentsDirectory();
-      File csvFile = File('${appDocDir.path}/wardrobe.csv');
+      Directory backendDir = Directory('C:/Users/Nimish Shukla/Documents/GitHub/StyleSync/backend');
+      File csvFile = File(path.join(backendDir.path, 'wardrobe.csv'));
       if (csvFile.existsSync()) {
         List<List<dynamic>> csvData = CsvToListConverter().convert(csvFile.readAsStringSync());
         setState(() {
@@ -519,8 +517,8 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
 
   Future<void> _saveClothesList() async {
     try {
-      Directory appDocDir = await getApplicationDocumentsDirectory();
-      File csvFile = File('${appDocDir.path}/wardrobe.csv');
+      Directory backendDir = Directory('C:/Users/Nimish Shukla/Documents/GitHub/StyleSync/backend');
+      File csvFile = File(path.join(backendDir.path, 'wardrobe.csv'));
       String csvData = const ListToCsvConverter().convert(clothesList);
       await csvFile.writeAsString(csvData);
     } catch (e) {
@@ -633,6 +631,8 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
     );
   }
 }
+
+
 class GenerateFitScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
