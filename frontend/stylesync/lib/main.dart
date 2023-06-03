@@ -682,6 +682,9 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
     );
   }
 }
+//Add background colour to the generat screen
+//Add a button to generate the fit
+//Add a button to save the fit
 
 
 class GenerateFitScreen extends StatefulWidget {
@@ -706,6 +709,7 @@ class _GenerateFitScreenState extends State<GenerateFitScreen> {
         title: const Text('Generate Fit'),
       ),
       body: Container(
+        
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
