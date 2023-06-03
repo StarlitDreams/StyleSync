@@ -34,7 +34,8 @@ dependencies:
   rive: ^0.7.22  
   flutter_switch: ^0.3.1
   flutter_email_sender: ^5.0.2
-
+  path_provider: ^2.0.8
+  csv: ^5.0.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -50,7 +51,6 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
   font_awesome_flutter: ^9.2.0
-  animated_text_kit: ^4.2.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -70,6 +70,7 @@ flutter:
    - images/testing.jpg
    - assets/my_animation.riv 
    - images/purple.jpg
+   - images/temp_back.jpg
    
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

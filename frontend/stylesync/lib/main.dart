@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:csv/csv.dart';
 
 final GlobalKey<_StyleSyncAppState> appKey = GlobalKey<_StyleSyncAppState>();
 
@@ -383,7 +386,7 @@ class TakeSeatScreen extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('images/testing.jpg'), // Replace with your image path
+            image: AssetImage('images/temp_back.jpg'), // Replace with your image path
             fit: BoxFit.cover,
           ),
         ),
@@ -464,21 +467,64 @@ class TakeSeatScreen extends StatelessWidget {
     );
   }
 }
-class AddClothesScreen extends StatelessWidget {
+
+class AddClothesScreen extends StatefulWidget {
+  @override
+  _AddClothesScreenState createState() => _AddClothesScreenState();
+}
+
+class _AddClothesScreenState extends State<AddClothesScreen> {
+  List<List<String>> clothesList = [];
+  TextEditingController clothController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Add Clothes'),
       ),
-      body: Container(
-        child: Center(
-          child: Text('Add Clothes'),
+      body: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            TextField(
+              controller: clothController,
+              decoration: InputDecoration(hintText: 'Enter clothes name'),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: clothesList.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(clothesList[index].join(',')),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () async {
+          if (clothController.text.isNotEmpty) {
+            setState(() {
+              clothesList.add([clothController.text]);
+            });
+            clothController.clear();
+
+            String csvData = const ListToCsvConverter().convert(clothesList);
+
+            File file = File('C:/Users/Nimish Shukla/Documents/GitHub/StyleSync/backend/wardrobe.csv');
+            await file.writeAsString(csvData);
+          }
+        },
       ),
     );
   }
 }
+
+
 
 class GenerateFitScreen extends StatelessWidget {
   @override
