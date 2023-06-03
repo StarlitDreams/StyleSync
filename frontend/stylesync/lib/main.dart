@@ -173,6 +173,7 @@ class PersonalInfoScreen extends StatefulWidget {
   _PersonalInfoScreenState createState() => _PersonalInfoScreenState();
 }
 
+
 class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
@@ -181,6 +182,19 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   bool isAgeValid = true;
   bool isPronounsValid = true;
 
+  Future<void> saveBiodata() async {
+    try {
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+      File biodataFile = File('${appDocDir.path}/biodata.txt');
+      String age = ageController.text;
+      String pronouns = pronounsController.text;
+
+      await biodataFile.writeAsString('$age\n$pronouns');
+    } catch (e) {
+      print('Error saving biodata: $e');
+    }
+  }
+
   void validateFields() {
     setState(() {
       isNameValid = nameController.text.isNotEmpty;
@@ -188,6 +202,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       isPronounsValid = pronounsController.text.isNotEmpty;
 
       if (isNameValid && isAgeValid && isPronounsValid) {
+        saveBiodata(); // Save biodata to the file
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -468,6 +483,10 @@ class TakeSeatScreen extends StatelessWidget {
   }
 }
 
+
+
+
+
 class AddClothesScreen extends StatefulWidget {
   @override
   _AddClothesScreenState createState() => _AddClothesScreenState();
@@ -476,6 +495,52 @@ class AddClothesScreen extends StatefulWidget {
 class _AddClothesScreenState extends State<AddClothesScreen> {
   List<List<String>> clothesList = [];
   TextEditingController clothController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadClothesList();
+  }
+
+  Future<void> _loadClothesList() async {
+    try {
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+      File csvFile = File('${appDocDir.path}/wardrobe.csv');
+      if (csvFile.existsSync()) {
+        List<List<dynamic>> csvData = CsvToListConverter().convert(csvFile.readAsStringSync());
+        setState(() {
+          clothesList = csvData.map((row) => row.map((item) => item.toString()).toList()).toList();
+        });
+      }
+    } catch (e) {
+      print('Error loading clothes list: $e');
+    }
+  }
+
+  Future<void> _saveClothesList() async {
+    try {
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+      File csvFile = File('${appDocDir.path}/wardrobe.csv');
+      String csvData = const ListToCsvConverter().convert(clothesList);
+      await csvFile.writeAsString(csvData);
+    } catch (e) {
+      print('Error saving clothes list: $e');
+    }
+  }
+
+  Future<void> _removeCloth(int index) async {
+    setState(() {
+      clothesList.removeAt(index);
+    });
+    await _saveClothesList();
+  }
+
+  Future<void> _editCloth(int index, String newCloth) async {
+    setState(() {
+      clothesList[index] = [newCloth];
+    });
+    await _saveClothesList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -495,8 +560,57 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
               child: ListView.builder(
                 itemCount: clothesList.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(clothesList[index].join(',')),
+                  return Dismissible(
+                    key: Key(clothesList[index].join(',')),
+                    onDismissed: (direction) {
+                      _removeCloth(index);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Cloth deleted.'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    },
+                    background: Container(color: Colors.red),
+                    child: AnimatedOpacity(
+                      opacity: 1.0,
+                      duration: Duration(milliseconds: 500),
+                      child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 8),
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 2,
+                              blurRadius: 3,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(clothesList[index].join(',')),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.delete),
+                              onPressed: () {
+                                _removeCloth(index);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Cloth deleted.'),
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   );
                 },
               ),
@@ -512,20 +626,13 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
               clothesList.add([clothController.text]);
             });
             clothController.clear();
-
-            String csvData = const ListToCsvConverter().convert(clothesList);
-
-            File file = File('C:/Users/Nimish Shukla/Documents/GitHub/StyleSync/backend/wardrobe.csv');
-            await file.writeAsString(csvData);
+            await _saveClothesList();
           }
         },
       ),
     );
   }
 }
-
-
-
 class GenerateFitScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
