@@ -307,7 +307,7 @@ class _FeelLikeScreenState extends State<FeelLikeScreen> {
       File fitFile = File('${backendDir.path}/biodata.txt');
       String feeling = feelingController.text;
 
-      await fitFile.writeAsString(feeling);
+    await fitFile.writeAsString('\n$feeling', mode: FileMode.append);
     } catch (e) {
       print('Error saving data: $e');
     }
@@ -586,9 +586,9 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _categoryButton('Tops'),
-                      _categoryButton('Bottoms'),
-                      _categoryButton('Accessories'),
+                      _categoryButton('tops'),
+                      _categoryButton('bottoms'),
+                      _categoryButton('accessories'),
                     ],
                   ),
                   TextField(

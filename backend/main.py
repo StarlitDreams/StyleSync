@@ -1,20 +1,11 @@
 import openai
 import csv
-import os
-
-def read_api_key():
-    filename = r"C:\Users\Nimish Shukla\Documents\GitHub\StyleSync\backend\api_key.txt"
-    print(filename)
+def read_api_key(filename):
     with open(filename, 'r') as file:
-        api_key = file.readline().strip()
+        api_key = file.readline().strip()  
     return api_key
-
-
-openai.api_key  = read_api_key()
-
-
+openai.api_key  = read_api_key("api_key.txt")
         
-
 messages = [
     {
         "role": "system",
@@ -37,30 +28,23 @@ with open('biodata.txt', 'r') as file:
         pronoun = lines[1].strip()
         preference = lines[2].strip()
 
+
 messages.append({"role": "user", "content": "I am " + str(age) + " years old."})
 messages.append({"role": "user", "content": "I Identify as " + pronoun + "."})
 messages.append({"role": "user", "content": "I prefer " + preference + " clothing today."})
 
 
 file_path =r'wardrobe.csv'
-
 with open(file_path, 'r') as f:
     reader = csv.reader(f)
-
     for row in reader:
         row_string = ', '.join(row)
         messages.append({'role': "user", "content": row_string})
-
 chat = openai.ChatCompletion.create(
             model="gpt-3.5-turbo", messages=messages,temperature=0.7, max_tokens=150
         )
 reply = chat.choices[0].message.content
-
 messages.append({"role": "assistant", "content": reply})
-
 fit=open("fit.txt","w")
 fit.write(reply)
 fit.close()
-
-
-
