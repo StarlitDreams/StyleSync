@@ -175,6 +175,7 @@ class PersonalInfoScreen extends StatefulWidget {
 }
 
 
+
 class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
@@ -185,8 +186,8 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
 
   Future<void> saveBiodata() async {
     try {
-      Directory appDocDir = await getApplicationDocumentsDirectory();
-      File biodataFile = File('${appDocDir.path}/biodata.txt');
+      Directory backendDir = Directory('C:/Users/Nimish Shukla/Documents/GitHub/StyleSync/backend');
+      File biodataFile = File(path.join(backendDir.path, 'biodata.txt'));
       String age = ageController.text;
       String pronouns = pronounsController.text;
 
@@ -285,6 +286,35 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     );
   }
 }
+
+  Widget buildAnimatedTextField(
+    TextEditingController controller,
+    String labelText,
+    bool isValid,
+  ) {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: isValid ? Colors.transparent : Colors.red),
+      ),
+      child: TextField(
+        controller: controller,
+        style: TextStyle(color: Colors.black),
+        decoration: InputDecoration(
+          labelText: labelText,
+          labelStyle: TextStyle(color: Colors.black54),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 16),
+          errorText: isValid ? null : 'Please enter $labelText',
+        ),
+      ),
+    );
+  }
 
 class FeelLikeScreen extends StatefulWidget {
   final String name;
@@ -386,6 +416,7 @@ class _FeelLikeScreenState extends State<FeelLikeScreen> {
     );
   }
 }
+
 
 class TakeSeatScreen extends StatelessWidget {
   final String feeling;
