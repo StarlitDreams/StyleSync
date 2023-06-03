@@ -69,7 +69,10 @@ flutter:
    - images/logo.jpg
    - images/testing.jpg
    - assets/my_animation.riv
-   - images/temp_back.jpg
+   - assets/output.txt
+   - images/background1.jpg
+   - images/skyline.jpg
+   - images/background.jpg
    
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

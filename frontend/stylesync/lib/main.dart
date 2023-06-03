@@ -5,6 +5,8 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:csv/csv.dart';
 import 'package:path/path.dart' as path;
+import 'package:flutter/services.dart';
+import 'dart:ffi';
 
 final GlobalKey<_StyleSyncAppState> appKey = GlobalKey<_StyleSyncAppState>();
 
@@ -46,135 +48,132 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color.fromRGBO(253, 175, 19, 1),
-              Color.fromARGB(255, 78, 232, 240),
-            ],
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'images/background.jpg',
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Hero(
-                tag: 'logo',
-                child: Image.asset('images/logo.jpg', height: 150),
-              ),
-              SizedBox(height: 16),
-              DefaultTextStyle(
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'CustomFont',
-                  color: Colors.white,
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Hero(
+                  tag: 'logo',
+                  child: Image.asset('images/logo.jpg', height: 150),
                 ),
-                child: AnimatedTextKit(
-                  animatedTexts: [
-                    TypewriterAnimatedText('Welcome to StyleSync'),
+                SizedBox(height: 16),
+                DefaultTextStyle(
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'CustomFont',
+                    color: Colors.white,
+                  ),
+                  child: AnimatedTextKit(
+                    animatedTexts: [
+                      TypewriterAnimatedText('Welcome to StyleSync'),
+                    ],
+                    totalRepeatCount: 1,
+                  ),
+                ),
+                SizedBox(height: 32),
+                AnimatedOpacity(
+                  opacity: 1,
+                  duration: Duration(seconds: 2),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PersonalInfoScreen(),
+                        ),
+                      );
+                    },
+                    style: ButtonStyle(
+                      padding: MaterialStateProperty.all<EdgeInsets>(
+                        EdgeInsets.all(15),
+                      ),
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        Colors.blueAccent,
+                      ),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                      ),
+                    ),
+                    child: Text(
+                      'Get Started',
+                      style: TextStyle(
+                        fontFamily: 'Pixelated',
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'Connect with us',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        // Handle social media button action
+                      },
+                      icon: FaIcon(
+                        FontAwesomeIcons.linkedin,
+                        color: Colors.white,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        // Handle social media button action
+                      },
+                      icon: FaIcon(
+                        FontAwesomeIcons.twitter,
+                        color: Colors.white,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        // Handle social media button action
+                      },
+                      icon: FaIcon(
+                        FontAwesomeIcons.instagram,
+                        color: Colors.white,
+                      ),
+                    ),
                   ],
-                  totalRepeatCount: 1,
                 ),
-              ),
-              SizedBox(height: 32),
-              AnimatedOpacity(
-                opacity: 1,
-                duration: Duration(seconds: 2),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PersonalInfoScreen(),
-                      ),
-                    );
-                  },
-                  style: ButtonStyle(
-                    padding: MaterialStateProperty.all<EdgeInsets>(
-                      EdgeInsets.all(15),
-                    ),
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                      Colors.blueAccent,
-                    ),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                    ),
-                  ),
-                  child: Text(
-                    'Get Started',
-                    style: TextStyle(
-                      fontFamily: 'Pixelated',
-                      fontSize: 20,
-                      color: Colors.white,
-                    ),
-                  ),
+                SizedBox(height: 16),
+                CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                 ),
-              ),
-              SizedBox(height: 16),
-              Text(
-                'Connect with us',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                ),
-              ),
-              SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      // Handle social media button action
-                    },
-                    icon: FaIcon(
-                      FontAwesomeIcons.linkedin,
-                      color: Colors.white,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      // Handle social media button action
-                    },
-                    icon: FaIcon(
-                      FontAwesomeIcons.twitter,
-                      color: Colors.white,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      // Handle social media button action
-                    },
-                    icon: FaIcon(
-                      FontAwesomeIcons.instagram,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 16),
-              CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
 }
 
+
 class PersonalInfoScreen extends StatefulWidget {
   @override
   _PersonalInfoScreenState createState() => _PersonalInfoScreenState();
 }
-
-
 
 class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   final TextEditingController nameController = TextEditingController();
@@ -224,18 +223,14 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
         title: Text('Personal Information'),
         automaticallyImplyLeading: false, // Disables back button
       ),
-      body: Center(
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color.fromRGBO(253, 175, 19, 1),
-                Color.fromARGB(255, 78, 232, 240),
-              ],
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('images/background.jpg'), // Replace with your image path
+            fit: BoxFit.cover,
           ),
+        ),
+        child: Padding(
           padding: EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -286,35 +281,6 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     );
   }
 }
-
-  Widget buildAnimatedTextField(
-    TextEditingController controller,
-    String labelText,
-    bool isValid,
-  ) {
-    return AnimatedContainer(
-      duration: Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: isValid ? Colors.transparent : Colors.red),
-      ),
-      child: TextField(
-        controller: controller,
-        style: TextStyle(color: Colors.black),
-        decoration: InputDecoration(
-          labelText: labelText,
-          labelStyle: TextStyle(color: Colors.black54),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 16),
-          errorText: isValid ? null : 'Please enter $labelText',
-        ),
-      ),
-    );
-  }
 
 class FeelLikeScreen extends StatefulWidget {
   final String name;
@@ -369,13 +335,9 @@ class _FeelLikeScreenState extends State<FeelLikeScreen> {
       ),
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color.fromRGBO(253, 175, 19, 1),
-              Color.fromARGB(255, 78, 232, 240),
-            ],
+          image: DecorationImage(
+            image: AssetImage('images/background.jpg'), // Replace with your image path
+            fit: BoxFit.cover,
           ),
         ),
         child: Padding(
@@ -446,7 +408,7 @@ class TakeSeatScreen extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('images/temp_back.jpg'), // Replace with your image path
+            image: AssetImage('images/background.jpg'), // Replace with your image path
             fit: BoxFit.cover,
           ),
         ),
@@ -677,7 +639,15 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
 }
 
 
-class GenerateFitScreen extends StatelessWidget {
+
+class GenerateFitScreen extends StatefulWidget {
+  @override
+  _GenerateFitScreenState createState() => _GenerateFitScreenState();
+}
+
+class _GenerateFitScreenState extends State<GenerateFitScreen> {
+  String outputText = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -685,13 +655,47 @@ class GenerateFitScreen extends StatelessWidget {
         title: Text('Generate Fit'),
       ),
       body: Container(
-        child: Center(
-          child: Text('Generate Fit'),
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                runPythonScript();
+              },
+              child: Text('Generate Fit'),
+            ),
+            SizedBox(height: 16.0),
+            Text(outputText),
+          ],
         ),
       ),
     );
   }
+
+  void runPythonScript() async {
+    try {
+      // Get the directory where main.py is located
+      final directory = Directory('C:/Users/Nimish Shukla/Documents/GitHub/StyleSync/backend');
+
+      // Run the main.py script using the 'python' command
+      final result = await Process.run('python', ['main.py'], workingDirectory: directory.path);
+
+      // Read the content of output.txt
+      final outputFile = File('${directory.path}/output.txt');
+      final outputContent = await outputFile.readAsString();
+
+      setState(() {
+        outputText = outputContent;
+      });
+    } catch (e) {
+      setState(() {
+        outputText = 'Error running Python script: $e';
+      });
+    }
+  }
 }
+
 
 class SettingsScreen extends StatefulWidget {
   @override
