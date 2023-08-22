@@ -682,9 +682,6 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
     );
   }
 }
-//Add background colour to the generat screen
-//Add a button to generate the fit
-//Add a button to save the fit
 
 
 class GenerateFitScreen extends StatefulWidget {
